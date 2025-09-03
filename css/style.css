@@ -4,6 +4,7 @@ body {
   margin: 0;
   background-color: #1a0029; /* dark purple */
   color: #f5f5f5;
+  line-height: 1.6;
 }
 
 /* Colores principales */
@@ -25,6 +26,7 @@ body {
 .main-header {
   background-color: var(--dark-purple);
   padding: 20px 0;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .main-header h1 {
@@ -37,6 +39,7 @@ nav ul {
   display: flex;
   gap: 20px;
   padding: 0;
+  margin: 0;
 }
 
 nav a {
@@ -48,6 +51,16 @@ nav a {
 
 nav a:hover {
   color: var(--pink);
+}
+
+/* Header sticky */
+.main-header.sticky {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background-color: rgba(44, 0, 62, 0.95);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+  z-index: 1000;
 }
 
 /* Hero Section */
@@ -64,13 +77,15 @@ nav a:hover {
   padding: 15px 30px;
   border-radius: 30px;
   font-weight: bold;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, transform 0.3s ease;
   text-decoration: none;
+  display: inline-block;
 }
 
 .hero .btn:hover {
   background-color: var(--light-purple);
   color: #000;
+  transform: scale(1.05);
 }
 
 /* Features */
@@ -96,11 +111,12 @@ nav a:hover {
   text-align: center;
   color: white;
   box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-  transition: transform 0.3s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .card:hover {
-  transform: translateY(-5px);
+  transform: translateY(-5px) scale(1.03);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.4);
 }
 
 /* Comunidad */
@@ -118,10 +134,38 @@ nav a:hover {
   text-align: center;
 }
 
+.join .btn {
+  background-color: var(--dark-purple);
+  color: var(--gold);
+  padding: 12px 25px;
+  border-radius: 25px;
+  font-weight: bold;
+  text-decoration: none;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.join .btn:hover {
+  background-color: var(--purple);
+  color: #fff;
+  transform: scale(1.05);
+}
+
 /* Footer */
 footer {
   background-color: var(--dark-purple);
   padding: 20px;
   text-align: center;
   font-size: 0.9rem;
+}
+
+/* Animaciones de aparición */
+.card, .hero h2, .hero p, .community p, .join p {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all 0.8s ease;
+}
+
+.visible {
+  opacity: 1;
+  transform: translateY(0);
 }
