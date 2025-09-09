@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Prysmania | Sanciones</title>
+  <link rel="stylesheet" href="css/sanciones.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="css/img/logo.png" />
+</head>
+<body>
+  <!-- Header -->
+  <header class="main-header">
+    <div class="container header-container">
+      <h1>Prysmania Network</h1>
+      <nav class="header-nav">
+        <ul>
+          <li><a href="index.html">Inicio</a></li>
+          <li><a href="index.html#features">Características</a></li>
+          <li><a href="index.html#comunidad">Comunidad</a></li>
+          <li><a href="sanciones.html">Sanciones</a></li>
+          <li><a href="index.html#votos">Votos</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <!-- Panel título + buscador -->
+    <section class="panel-sanciones">
+      <h2>SISTEMA DE SANCIONES</h2>
+      <div class="buscador">
+        <input type="text" id="searchInput" placeholder="Buscar jugador...">
+      </div>
+    </section>
+
+    <!-- Tabla de sanciones -->
+    <div class="tabla-container">
+      <table id="banTable">
+        <thead>
+          <tr>
+            <th>JUGADOR</th>
+            <th>RAZÓN</th>
+            <th>TIPO DE SANCIÓN</th>
+            <th>STAFF</th>
+            <th>FECHA</th>
+          </tr>
+        </thead>
+        <tbody>
+<tr data-tipo="Baneo"><td>MrAdmas</td><td>Intento de Hackeo Bypass</td><td>🛡️ Baneo</td><td>Console</td><td>2025-08-28</td></tr>
+<tr data-tipo="Advertencia"><td>Elmoor</td><td>Uso de Xray</td><td>⚠️ Advertencia</td><td>Console</td><td>2025-08-26</td></tr>
+<tr data-tipo="Expulsión"><td>Thaxxes43</td><td>Intento de Hackeo Bypass</td><td>⛔ Expulsión</td><td>Console</td><td>2025-08-27</td></tr>
+<tr data-tipo="Silenciado"><td>Noob03</td><td>Insultos</td><td>🔇 Silenciado</td><td>Console</td><td>2025-08-25</td></tr>
+<tr data-tipo="Baneo"><td>Elmoor2</td><td>Multicuenta</td><td>🛡️ Baneo</td><td>Console</td><td>2025-08-29</td></tr>
+<tr data-tipo="Advertencia"><td>pro_ggamer</td><td>Uso de Xray</td><td>⚠️ Advertencia</td><td>Console</td><td>2025-08-26</td></tr>
+<tr data-tipo="Baneo"><td>gansokawai</td><td>Uso de Xray</td><td>🛡️ Baneo</td><td>Console</td><td>2025-08-27</td></tr>
+<tr data-tipo="Expulsión"><td>pro_ggamer</td><td>Uso de Xray</td><td>⛔ Expulsión</td><td>Console</td><td>2025-08-28</td></tr>
+<tr data-tipo="Advertencia"><td>gansokawai</td><td>Uso de Xray</td><td>⚠️ Advertencia</td><td>Console</td><td>2025-08-26</td></tr>
+<tr data-tipo="Baneo"><td>TheMaster_</td><td>Hacks ¿FLY?</td><td>🛡️ Baneo</td><td>Console</td><td>2025-08-28</td></tr>
+<tr data-tipo="Expulsión"><td>Elmoor</td><td>Uso de Xray</td><td>⛔ Expulsión</td><td>Console</td><td>2025-08-27</td></tr>
+<tr data-tipo="Advertencia"><td>Elmoor</td><td>Uso de Xray</td><td>⚠️ Advertencia</td><td>Console</td><td>2025-08-29</td></tr>
+<tr data-tipo="Baneo"><td>Thaxxes43</td><td>Intento de Hackeo Bypass</td><td>🛡️ Baneo</td><td>Console</td><td>2025-08-27</td></tr>
+<tr data-tipo="Expulsión"><td>gansokawai</td><td>Uso de Xray</td><td>⛔ Expulsión</td><td>Console</td><td>2025-08-29</td></tr>
+<tr data-tipo="Silenciado"><td>Noob03</td><td>Insultos</td><td>🔇 Silenciado</td><td>Console</td><td>2025-08-26</td></tr>
+<tr data-tipo="Advertencia"><td>pro_ggamer</td><td>Uso de Xray</td><td>⚠️ Advertencia</td><td>Console</td><td>2025-08-28</td></tr>
+<tr data-tipo="Baneo"><td>Elmoor</td><td>Uso de Xray</td><td>🛡️ Baneo</td><td>Console</td><td>2025-08-28</td></tr>
+<tr data-tipo="Advertencia"><td>gansokawai</td><td>Uso de Xray</td><td>⚠️ Advertencia</td><td>Console</td><td>2025-08-25</td></tr>
+<tr data-tipo="Baneo"><td>SrGato</td><td>Intento de Hackeo Bypass</td><td>🛡️ Baneo</td><td>Console</td><td>2025-08-28</td></tr>
+<tr data-tipo="Expulsión"><td>Elmoor2</td><td>Multicuenta</td><td>⛔ Expulsión</td><td>Console</td><td>2025-08-29</td></tr>
+
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Totales -->
+    <section class="totales">
+      <div class="totalBox" data-tipo="Baneo"><div>🛡️</div><h3>Baneos</h3><p id="totalBaneos">0</p></div>
+      <div class="totalBox" data-tipo="Expulsión"><div>⛔</div><h3>Expulsiones</h3><p id="totalExpulsiones">0</p></div>
+      <div class="totalBox" data-tipo="Silenciado"><div>🔇</div><h3>Silenciamientos</h3><p id="totalSilenciamientos">0</p></div>
+      <div class="totalBox" data-tipo="Advertencia"><div>⚠️</div><h3>Advertencias</h3><p id="totalAdvertencias">0</p></div>
+    </section>
+
+    <!-- Paginación -->
+    <div class="pagination-container">
+      <button id="prevPage">◀ Anterior</button>
+      <span id="pageNumbers"></span>
+      <button id="nextPage">Siguiente ▶</button>
+    </div>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2025 Prysmania, todos los derechos reservados.</p>
+    </div>
+  </footer>
+
+  </main>
+
+
+
+  <script src="js/sanciones.js"></script>
+</body>
+</html>
