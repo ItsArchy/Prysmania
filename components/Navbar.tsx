@@ -3,43 +3,30 @@
 import { useEffect, useState } from "react"
 import { supabase } from "@/lib/supabase"
 import Link from "next/link"
-import { Press_Start_2P } from "next/font/google"
-
-const pressStart = Press_Start_2P({
-  subsets: ["latin"],
-  weight: "400",
-})
 
 export default function Navbar() {
   const [user, setUser] = useState<any>(null)
-  const [minecraftUsername, setMinecraftUsername] = useState<string | null>(null)
 
   useEffect(() => {
-    const loadInitialUser = async () => {
+    const init = async () => {
       const { data } = await supabase.auth.getUser()
       const currentUser = data.user
       setUser(currentUser)
 
       if (currentUser) {
-        await loadMinecraft(currentUser.id)
+        await ensureProfile(currentUser)
       }
     }
 
-    loadInitialUser()
+    init()
 
     const { data: listener } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
+      async (_event, session) => {
         const currentUser = session?.user ?? null
         setUser(currentUser)
 
-        if (event === "SIGNED_IN") {
-          window.location.href = "/perfil"
-        }
-
         if (currentUser) {
-          await loadMinecraft(currentUser.id)
-        } else {
-          setMinecraftUsername(null)
+          await ensureProfile(currentUser)
         }
       }
     )
@@ -49,110 +36,83 @@ export default function Navbar() {
     }
   }, [])
 
-  const loadMinecraft = async (userId: string) => {
-    const { data } = await supabase
-      .from("profiles")
-      .select("minecraft_username")
-      .eq("id", userId)
-      .maybeSingle()
+  /* =========================
+     CREAR / ACTUALIZAR PERFIL
+  ========================== */
 
-    setMinecraftUsername(data?.minecraft_username || null)
+  const ensureProfile = async (currentUser: any) => {
+    const discordIdentity = currentUser.identities?.find(
+      (i: any) => i.provider === "discord"
+    )
+
+    if (!discordIdentity) return
+
+    const discordId = discordIdentity.identity_data?.sub || null
+
+    const discordUsername =
+      discordIdentity.identity_data?.global_name ||
+      discordIdentity.identity_data?.username ||
+      null
+
+    const discordAvatar =
+      discordIdentity.identity_data?.avatar || null
+
+    await supabase.from("profiles").upsert({
+      id: currentUser.id,
+      discord_id: discordId,
+      discord_username: discordUsername,
+      discord_avatar: discordAvatar,
+    })
   }
 
-  const handleDiscordLogin = async () => {
-    if (typeof window === "undefined") return
+  /* =========================
+     LOGIN DISCORD
+  ========================== */
 
+  const handleDiscordLogin = async () => {
     await supabase.auth.signInWithOAuth({
       provider: "discord",
       options: {
-        redirectTo: "https://www.prysmania.com/perfil",
+        redirectTo: "http://localhost:3000/perfil",
       },
     })
   }
 
+  /* =========================
+     LOGOUT
+  ========================== */
+
   const handleLogout = async () => {
     await supabase.auth.signOut()
-    window.location.href = "/"
   }
 
-  const minecraftHead = minecraftUsername || "Steve"
-
   return (
-    <nav className="flex justify-between items-center px-12 py-5 bg-[#0f0f0f] border-b border-[#1f1f1f] text-white">
+    <nav className="flex justify-between items-center px-8 py-4 bg-[#0f0f0f] border-b border-[#1f1f1f] text-white">
 
-      {/* IZQUIERDA */}
-      <div className={`flex items-center gap-10 ${pressStart.className} text-xs tracking-wider`}>
+      <Link href="/" className="font-bold text-xl text-yellow-400">
+        Prysmania
+      </Link>
 
-        <Link href="/" className="flex items-center">
-          <img
-            src="/logo.png"
-            alt="Prysmania Logo"
-            className="h-14 w-14 object-contain rounded-full"
-          />
-        </Link>
+      <div className="flex items-center gap-6">
 
-        <Link href="/" className="hover:text-yellow-400 transition">
-          INICIO
-        </Link>
-
-        <Link href="/sanciones" className="hover:text-yellow-400 transition">
-          SANCIONES
-        </Link>
-
-        <Link href="/votaciones" className="hover:text-yellow-400 transition">
-          VOTACIONES
-        </Link>
-
-      </div>
-
-      {/* DERECHA */}
-      <div className={`flex items-center gap-6 ${pressStart.className} text-xs`}>
+        <Link href="/">Inicio</Link>
 
         {!user ? (
           <button
             onClick={handleDiscordLogin}
-            className="
-              cursor-pointer
-              bg-[#5865F2] text-white
-              px-8 py-3
-              border-2 border-[#4752c4]
-              shadow-[0_4px_0_#2c2f91]
-              hover:shadow-[0_6px_0_#2c2f91]
-              hover:-translate-y-1
-              active:translate-y-1 active:shadow-[0_2px_0_#2c2f91]
-              transition-all duration-150
-            "
+            className="bg-[#5865F2] hover:bg-[#4752c4] px-4 py-2 rounded font-semibold transition"
           >
-            INICIAR SESIÓN
+            Iniciar con Discord
           </button>
         ) : (
           <>
-            <Link
-              href="/perfil"
-              className="flex items-center gap-3 hover:opacity-80 transition"
-            >
-              <img
-                src={`https://mc-heads.net/avatar/${minecraftHead}`}
-                className="w-8 h-8"
-              />
-              <span>MI CUENTA</span>
-            </Link>
+            <Link href="/perfil">Mi Perfil</Link>
 
             <button
               onClick={handleLogout}
-              className="
-                cursor-pointer
-                bg-red-600 text-white
-                px-8 py-3
-                border-2 border-red-700
-                shadow-[0_4px_0_#7f1d1d]
-                hover:shadow-[0_6px_0_#7f1d1d]
-                hover:-translate-y-1
-                active:translate-y-1 active:shadow-[0_2px_0_#7f1d1d]
-                transition-all duration-150
-              "
+              className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded transition"
             >
-              CERRAR SESIÓN
+              Cerrar sesión
             </button>
           </>
         )}
