@@ -27,23 +27,23 @@ export default function Navbar() {
 
     init()
 
-    const { data: listener } = supabase.auth.onAuthStateChange(
-      async (_event, session) => {
-        const currentUser = session?.user ?? null
-        setUser(currentUser)
-
-        if (currentUser) {
-          await loadMinecraft(currentUser.id)
-        } else {
-          setMinecraftUsername(null)
-        }
-      }
-    )
-
-    return () => {
-      listener.subscription.unsubscribe()
+const { data: listener } = supabase.auth.onAuthStateChange(
+  async (event, session) => {
+    if (event === "SIGNED_IN") {
+      window.location.href = "/perfil"
     }
-  }, [])
+
+    const currentUser = session?.user ?? null
+    setUser(currentUser)
+
+    if (currentUser) {
+      await loadMinecraft(currentUser.id)
+    } else {
+      setMinecraftUsername(null)
+    }
+  }
+)
+
 
   const loadMinecraft = async (userId: string) => {
     const { data } = await supabase
@@ -61,7 +61,7 @@ export default function Navbar() {
     await supabase.auth.signInWithOAuth({
       provider: "discord",
       options: {
-        redirectTo: `https://prysmania.com/perfil`,
+        redirectTo: `${window.location.origin}/perfil`,
       },
     })
   }
