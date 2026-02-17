@@ -15,7 +15,7 @@ export default function Navbar() {
   const [minecraftUsername, setMinecraftUsername] = useState<string | null>(null)
 
   useEffect(() => {
-    const init = async () => {
+    const loadInitialUser = async () => {
       const { data } = await supabase.auth.getUser()
       const currentUser = data.user
       setUser(currentUser)
@@ -25,32 +25,36 @@ export default function Navbar() {
       }
     }
 
-    init()
+    loadInitialUser()
 
-const { data: listener } = supabase.auth.onAuthStateChange(
-  async (event, session) => {
-    if (event === "SIGNED_IN") {
-      window.location.href = "/perfil"
+    const { data: listener } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        const currentUser = session?.user ?? null
+        setUser(currentUser)
+
+        if (event === "SIGNED_IN") {
+          window.location.href = "/perfil"
+        }
+
+        if (currentUser) {
+          await loadMinecraft(currentUser.id)
+        } else {
+          setMinecraftUsername(null)
+        }
+      }
+    )
+
+    return () => {
+      listener.subscription.unsubscribe()
     }
-
-    const currentUser = session?.user ?? null
-    setUser(currentUser)
-
-    if (currentUser) {
-      await loadMinecraft(currentUser.id)
-    } else {
-      setMinecraftUsername(null)
-    }
-  }
-)
-
+  }, [])
 
   const loadMinecraft = async (userId: string) => {
     const { data } = await supabase
       .from("profiles")
       .select("minecraft_username")
       .eq("id", userId)
-      .single()
+      .maybeSingle()
 
     setMinecraftUsername(data?.minecraft_username || null)
   }
@@ -61,13 +65,14 @@ const { data: listener } = supabase.auth.onAuthStateChange(
     await supabase.auth.signInWithOAuth({
       provider: "discord",
       options: {
-        redirectTo: `https://www.prysmania.com/perfil`,
+        redirectTo: "https://www.prysmania.com/perfil",
       },
     })
   }
 
   const handleLogout = async () => {
     await supabase.auth.signOut()
+    window.location.href = "/"
   }
 
   const minecraftHead = minecraftUsername || "Steve"
