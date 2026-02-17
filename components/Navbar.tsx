@@ -55,14 +55,15 @@ export default function Navbar() {
     setMinecraftUsername(data?.minecraft_username || null)
   }
 
-  const handleDiscordLogin = async () => {
-    await supabase.auth.signInWithOAuth({
-      provider: "discord",
-      options: {
-        redirectTo: "http://prysmania.com/perfil",
-      },
-    })
-  }
+const handleDiscordLogin = async () => {
+  await supabase.auth.signInWithOAuth({
+    provider: "discord",
+    options: {
+      redirectTo: `${window.location.origin}/perfil`,
+    },
+  })
+}
+
 
   const handleLogout = async () => {
     await supabase.auth.signOut()
