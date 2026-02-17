@@ -61,7 +61,7 @@ const { data: listener } = supabase.auth.onAuthStateChange(
     await supabase.auth.signInWithOAuth({
       provider: "discord",
       options: {
-        redirectTo: `${window.location.origin}/perfil`,
+        redirectTo: `https://www.prysmania.com/perfil`,
       },
     })
   }
