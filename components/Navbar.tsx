@@ -55,15 +55,16 @@ export default function Navbar() {
     setMinecraftUsername(data?.minecraft_username || null)
   }
 
-const handleDiscordLogin = async () => {
-  await supabase.auth.signInWithOAuth({
-    provider: "discord",
-    options: {
-      redirectTo: `${window.location.origin}/perfil`,
-    },
-  })
-}
+  const handleDiscordLogin = async () => {
+    if (typeof window === "undefined") return
 
+    await supabase.auth.signInWithOAuth({
+      provider: "discord",
+      options: {
+        redirectTo: `${window.location.origin}/perfil`,
+      },
+    })
+  }
 
   const handleLogout = async () => {
     await supabase.auth.signOut()
@@ -127,7 +128,7 @@ const handleDiscordLogin = async () => {
             >
               <img
                 src={`https://mc-heads.net/avatar/${minecraftHead}`}
-                className="w-8 h-8 rounded"
+                className="w-8 h-8"
               />
               <span>MI CUENTA</span>
             </Link>
