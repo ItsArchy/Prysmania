@@ -15,7 +15,6 @@ export default function Navbar() {
       setUser(currentUser)
 
       if (currentUser) {
-        await ensureProfile(currentUser)
         await loadMinecraft(currentUser.id)
       }
     }
@@ -28,7 +27,6 @@ export default function Navbar() {
         setUser(currentUser)
 
         if (currentUser) {
-          await ensureProfile(currentUser)
           await loadMinecraft(currentUser.id)
         } else {
           setMinecraftUsername(null)
@@ -41,9 +39,7 @@ export default function Navbar() {
     }
   }, [])
 
-  /* =========================
-     CARGAR USERNAME MINECRAFT
-  ========================== */
+  /* ===== CARGAR USERNAME MINECRAFT ===== */
 
   const loadMinecraft = async (userId: string) => {
     const { data } = await supabase
@@ -52,45 +48,10 @@ export default function Navbar() {
       .eq("id", userId)
       .single()
 
-    if (data?.minecraft_username) {
-      setMinecraftUsername(data.minecraft_username)
-    } else {
-      setMinecraftUsername(null)
-    }
+    setMinecraftUsername(data?.minecraft_username || null)
   }
 
-  /* =========================
-     CREAR / ACTUALIZAR PERFIL
-  ========================== */
-
-  const ensureProfile = async (currentUser: any) => {
-    const discordIdentity = currentUser.identities?.find(
-      (i: any) => i.provider === "discord"
-    )
-
-    if (!discordIdentity) return
-
-    const discordId = discordIdentity.identity_data?.sub || null
-
-    const discordUsername =
-      discordIdentity.identity_data?.global_name ||
-      discordIdentity.identity_data?.username ||
-      null
-
-    const discordAvatar =
-      discordIdentity.identity_data?.avatar || null
-
-    await supabase.from("profiles").upsert({
-      id: currentUser.id,
-      discord_id: discordId,
-      discord_username: discordUsername,
-      discord_avatar: discordAvatar,
-    })
-  }
-
-  /* =========================
-     LOGIN DISCORD
-  ========================== */
+  /* ===== LOGIN DISCORD ===== */
 
   const handleDiscordLogin = async () => {
     await supabase.auth.signInWithOAuth({
@@ -101,9 +62,7 @@ export default function Navbar() {
     })
   }
 
-  /* =========================
-     LOGOUT
-  ========================== */
+  /* ===== LOGOUT ===== */
 
   const handleLogout = async () => {
     await supabase.auth.signOut()
@@ -114,13 +73,28 @@ export default function Navbar() {
   return (
     <nav className="flex justify-between items-center px-8 py-4 bg-[#0f0f0f] border-b border-[#1f1f1f] text-white">
 
-      <Link href="/" className="font-bold text-xl text-yellow-400">
-        Prysmania
-      </Link>
-
+      {/* IZQUIERDA: LOGO + INICIO */}
       <div className="flex items-center gap-6">
 
-        <Link href="/">Inicio</Link>
+        <Link href="/" className="flex items-center">
+          <img
+            src="/logo.png"
+            alt="Prysmania Logo"
+            className="h-10 object-contain"
+          />
+        </Link>
+
+        <Link
+          href="/"
+          className="hover:text-yellow-400 transition"
+        >
+          Inicio
+        </Link>
+
+      </div>
+
+      {/* DERECHA */}
+      <div className="flex items-center gap-6">
 
         {!user ? (
           <button
@@ -152,6 +126,7 @@ export default function Navbar() {
         )}
 
       </div>
+
     </nav>
   )
 }
