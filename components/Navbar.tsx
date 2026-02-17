@@ -59,7 +59,7 @@ export default function Navbar() {
     await supabase.auth.signInWithOAuth({
       provider: "discord",
       options: {
-        redirectTo: "http://localhost:3000/perfil",
+        redirectTo: "http://prysmania.com/perfil",
       },
     })
   }
