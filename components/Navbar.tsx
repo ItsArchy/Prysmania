@@ -6,6 +6,7 @@ import Link from "next/link"
 
 export default function Navbar() {
   const [user, setUser] = useState<any>(null)
+  const [minecraftUsername, setMinecraftUsername] = useState<string | null>(null)
 
   useEffect(() => {
     const init = async () => {
@@ -15,6 +16,7 @@ export default function Navbar() {
 
       if (currentUser) {
         await ensureProfile(currentUser)
+        await loadMinecraft(currentUser.id)
       }
     }
 
@@ -27,6 +29,9 @@ export default function Navbar() {
 
         if (currentUser) {
           await ensureProfile(currentUser)
+          await loadMinecraft(currentUser.id)
+        } else {
+          setMinecraftUsername(null)
         }
       }
     )
@@ -35,6 +40,24 @@ export default function Navbar() {
       listener.subscription.unsubscribe()
     }
   }, [])
+
+  /* =========================
+     CARGAR USERNAME MINECRAFT
+  ========================== */
+
+  const loadMinecraft = async (userId: string) => {
+    const { data } = await supabase
+      .from("profiles")
+      .select("minecraft_username")
+      .eq("id", userId)
+      .single()
+
+    if (data?.minecraft_username) {
+      setMinecraftUsername(data.minecraft_username)
+    } else {
+      setMinecraftUsername(null)
+    }
+  }
 
   /* =========================
      CREAR / ACTUALIZAR PERFIL
@@ -86,6 +109,8 @@ export default function Navbar() {
     await supabase.auth.signOut()
   }
 
+  const minecraftHead = minecraftUsername || "Steve"
+
   return (
     <nav className="flex justify-between items-center px-8 py-4 bg-[#0f0f0f] border-b border-[#1f1f1f] text-white">
 
@@ -106,7 +131,16 @@ export default function Navbar() {
           </button>
         ) : (
           <>
-            <Link href="/perfil">Mi Perfil</Link>
+            <Link
+              href="/perfil"
+              className="flex items-center gap-2 hover:opacity-80 transition"
+            >
+              <img
+                src={`https://mc-heads.net/avatar/${minecraftHead}`}
+                className="w-8 h-8 rounded"
+              />
+              <span>Mi Cuenta</span>
+            </Link>
 
             <button
               onClick={handleLogout}
