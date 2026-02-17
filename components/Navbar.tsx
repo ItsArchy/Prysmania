@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react"
 import { supabase } from "@/lib/supabase"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
 import { Press_Start_2P } from "next/font/google"
 
 const pressStart = Press_Start_2P({
@@ -14,26 +13,19 @@ const pressStart = Press_Start_2P({
 export default function Navbar() {
   const [user, setUser] = useState<any>(null)
   const [minecraftUsername, setMinecraftUsername] = useState<string | null>(null)
-  const router = useRouter()
-
-  /* =========================
-     CARGAR USUARIO
-  ========================== */
 
   useEffect(() => {
-    const loadUser = async () => {
+    const init = async () => {
       const { data } = await supabase.auth.getUser()
       const currentUser = data.user
       setUser(currentUser)
 
       if (currentUser) {
         await loadMinecraft(currentUser.id)
-      } else {
-        setMinecraftUsername(null)
       }
     }
 
-    loadUser()
+    init()
 
     const { data: listener } = supabase.auth.onAuthStateChange(
       async (_event, session) => {
@@ -53,10 +45,6 @@ export default function Navbar() {
     }
   }, [])
 
-  /* =========================
-     CARGAR USERNAME MINECRAFT
-  ========================== */
-
   const loadMinecraft = async (userId: string) => {
     const { data } = await supabase
       .from("profiles")
@@ -66,10 +54,6 @@ export default function Navbar() {
 
     setMinecraftUsername(data?.minecraft_username || null)
   }
-
-  /* =========================
-     LOGIN DISCORD
-  ========================== */
 
   const handleDiscordLogin = async () => {
     if (typeof window === "undefined") return
@@ -82,22 +66,9 @@ export default function Navbar() {
     })
   }
 
-  /* =========================
-     LOGOUT SEGURO
-  ========================== */
-
-const handleLogout = async () => {
-  const { error } = await supabase.auth.signOut()
-
-  if (!error) {
-    setUser(null)
-    setMinecraftUsername(null)
-    window.location.href = "/"
-  } else {
-    console.error("Error cerrando sesión:", error.message)
+  const handleLogout = async () => {
+    await supabase.auth.signOut()
   }
-}
-
 
   const minecraftHead = minecraftUsername || "Steve"
 
