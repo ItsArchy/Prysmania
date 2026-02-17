@@ -86,15 +86,18 @@ export default function Navbar() {
      LOGOUT SEGURO
   ========================== */
 
-  const handleLogout = async () => {
-    await supabase.auth.signOut()
+const handleLogout = async () => {
+  const { error } = await supabase.auth.signOut()
 
+  if (!error) {
     setUser(null)
     setMinecraftUsername(null)
-
-    router.push("/")      // Redirige al inicio
-    router.refresh()      // Refresca estado
+    window.location.href = "/"
+  } else {
+    console.error("Error cerrando sesión:", error.message)
   }
+}
+
 
   const minecraftHead = minecraftUsername || "Steve"
 
